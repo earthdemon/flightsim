@@ -1,0 +1,175 @@
+import Foundation
+
+
+
+
+
+///Departing Northbound from EGHH
+
+
+/*
+dra(90)
+rdg(Double.pi/2)
+
+struct locus{
+    let lng:Double
+    let lat:Double
+}
+
+struct nav{
+    var brg:Double
+    var dst:Double
+}
+
+let Bournemouth = locus(lng: -18425, lat: 507800)
+let Bristol = locus(lng: -25864, lat: 514128)
+let Manchester = locus(lng: -22752, lat: 533580)
+
+var BrnBrsNav0 = nav(brg: 49.61, dst: 9766.0/70) //initial value may be phased out
+
+print(BrnBrsNav0)
+print("underline")
+
+let BrnBrsX = 7439.0 // will be phased out
+var BrnBrsNav = BrnBrsNav0
+
+for i in 514128...533580 where i%700 == 0{
+let BrnBrsY = Double(abs(i-514128)) // northerly progress
+    ///print("northerly progress \(BrnBrsY)")
+   // BrnBrsNav.brg = dra(atan(Double(BrnBrsNav.dst)/BrnBrsY)) //calcs bearing
+BrnBrsNav.brg = (Double(i)/BrnBrsX)
+    BrnBrsNav.dst = (BrnBrsX/sin(atan(Double(BrnBrsNav0.dst)/BrnBrsY)))/70 //calcs progress
+  print("Y= \(BrnBrsY) X= \(BrnBrsY)")
+    print(BrnBrsNav)
+}
+ 
+ Double.pi
+ let rq = 0.00507986893303297
+ BrnBrsNav.brg.rounded(.toNearestOrAwayFromZero)
+ BrnBrsNav.dst.rounded(.toNearestOrAwayFromZero)
+ 
+
+ 
+*/
+
+///This simple few lines of code provides the bearing from Q to P of an object heading north from the positions below.
+///cert
+/*///
+let p = (-100.0, 0.0)
+var q = (0.0, -100.0)
+for i in -100...100 {
+    print(rdg(atan(100/Double(i))))
+}
+*////
+
+/// Now we add distance flown
+
+
+
+
+//==========================================
+/*
+
+let bournemouth = (-100.0, 0.0)
+var bristol = (0.0, -100.0)
+let dx = bournemouth.0 - bristol.0
+
+for i in -100...100 where i%20 == 0 {
+ for _ in 1...999999{
+ }
+    var brg:Double = (360+(rdg(atan(100/Double(i)))))
+    if brg >= 360 {
+        brg -= 180
+    }
+    
+    let rng = dx/(sin(Double(dra(brg))))
+    
+    print("BRS is \(rng.rounded(.toNearestOrAwayFromZero)) NM at \(brg.rounded(.toNearestOrAwayFromZero))", terminator:"  -  ")
+    //print("BRS is at \(brg.rounded(.toNearestOrAwayFromZero))", terminator:"  -  ")
+    print("\(i+100) units flown")
+   // print("range \(rng.rounded(.toNearestOrAwayFromZero))")
+    
+}
+ */
+
+//=========== Add a third airport
+
+func rdg(_ rad:Double)->Double{
+    return rad*180/Double.pi
+}
+
+func dra(_ deg:Double)->Double{
+    return deg*Double.pi/180
+}
+
+
+ struct blocus {
+    let alpha:String
+    let x:Double
+    let y:Double
+ }
+
+//Ok I have learnt how to put structs in a dictionary, now I want to put one into an array.
+
+//var database:[String:blocus] = ["departing": blocus(alpha: "Bournemouth", x: 200, y: 0)
+
+var airports: [String:blocus] = ["departing": blocus(alpha: "Bournemouth", x: 200, y: 0), "arriving":blocus(alpha: "Newcastle", x: 250, y: 300), "VOR":blocus(alpha: "Bristol", x: 100, y: 100)]
+
+var finaleg = 0.0
+
+print("CONSOLE")
+print()
+
+//dx,dy, hd0 are basic direction from departure to destination
+
+
+
+let dx0 = (airports["departing"]!.x)-(airports["arriving"]!.x)
+let dy0 = (airports["departing"]!.y)-(airports["arriving"]!.y)
+let hd0 = rdg(atan(dx0/dy0))
+//let hd1 = atan(rdg(dx0/dy0))
+let s0 = sqrt (Double(dx0*dx0+dy0*dy0))
+let hd0Int = Int(hd0)
+
+print("GBOL, climb and maintain 4,000 ft turn right heading \(hd0Int)")
+
+for i in 0...Int(s0) where i%20 == 0 {
+var xx:Double = 0
+ 
+    //delay loo
+    for _ in 1...777777{
+    }
+ 
+    let yy = (Double(i)*(cos(dra(hd0))))
+    if hd0 == 0{
+        xx = 0
+            }else{
+                xx = (Double(i)*(sin(dra(hd0))))
+    }
+    
+    //final leg
+    
+    
+    var hdVOR:Double = (360+(rdg(atan(100/Double(i)))))
+    if hdVOR >= 360 {
+        hdVOR -= 180
+    }
+    
+    //
+    //let posNow =
+    //let rngDest =
+    
+   //let rngVor = vordx/(sin(Double(dra(brgVor))))  //dist to VOR
+    
+  //  print("VOR BRS is \(rngVor.rounded(.toNearestOrAwayFromZero)) NM at \(brgVor.rounded(.toNearestOrAwayFromZero))", terminator:"  -  ")
+    print("\(i) NM flown")
+   print("xx = \(xx) & yy = \(yy)")
+finaleg = s0-Double(i)
+}
+
+print()
+print("\(finaleg) miles to run")
+print()
+print("This is \(airports["arriving"]!.alpha).")
+
+
