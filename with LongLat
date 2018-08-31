@@ -1,0 +1,127 @@
+import Foundation
+
+
+func rdg(_ rad:Double)->Double{
+    return rad*180/Double.pi
+}
+
+func dra(_ deg:Double)->Double{
+    return deg*Double.pi/180
+}
+
+ struct locus {
+    let alpha:String
+    let x:Double
+    let y:Double
+ }
+
+var database:[String:locus] = ["AA": locus(alpha: "Belfast", x: 378.38, y: 5466.18), "JJ":locus(alpha: "Jersey", x: 780.48, y: 4920.75), "PD": locus(alpha: "Aberdeen", x: 779.98, y: 5720.37), "MC":locus(alpha: "Southend", x: 1069.39, y: 5157.00), "LC":locus(alpha: "London City", x: 1004.95, y: 5150.48)]
+
+var airports: [String:locus] = ["departing": locus(alpha: "Bournemouth", x: 400, y: 0), "arriving":locus(alpha: "Newcastle", x: 450, y: 300), "VOR":locus(alpha: "Bristol", x: 300, y: 100)]
+
+var finaleg = 0.0
+
+  for (code, data) in database{
+    print("\(code) \(data.alpha)")
+    }
+
+print()
+
+func select(_ fdep:String, _ fdest:String){
+    print("Filing flight plan")
+    for _ in 0...80{
+        print(".", terminator:"")
+    }
+    print()
+print(fdep, fdest)
+        print("\(database[fdep]!.alpha) to \(database[fdest]!.alpha) direct")
+    
+    airports["departing"] = database[fdep]
+    airports ["arriving"] = database[fdest]
+   
+}
+//\/\/\/\/\/\/\/\/\/\/\
+select("LC","AA")
+//\/\/\/\/\/\/\/\/\/\/\
+print()
+
+print("CONSOLE")
+print()
+
+let dpx = (airports["departing"]!.x)
+let arx = (airports["arriving"]!.x)
+let dpy = (airports["departing"]!.y)
+let ary = (airports["arriving"]!.y)
+
+///NEW TRIG SEQUENCE
+
+let dx = arx-dpx
+let dy = ary-dpy
+
+var hd0 = rdg(atan(dx/dy))
+if dx == 0 && dy == 0 {
+    print("Flight plan cancelled.  Contact Ground 118.3")
+}
+if (dx == 0 && dy < 0) || (dx < 0 && dy == 0) || (dx > 0 && dy < 0) || (dx < 0 && dy < 0) {
+    hd0 += 180
+}
+
+if hd0 < 0 {
+    hd0 += 360
+}
+if hd0 > 360 {
+    hd0 -= 360
+}
+
+let s0 = sqrt (Double(dx*dx+dy*dy))
+let hd0Int = Int(hd0)
+
+let s0Int = Int(s0)
+print("Charlie Alpha this is \(airports["departing"]!.alpha) Tower g'day, climb and maintain 4,000 ft turn right heading \(hd0Int) for \(s0Int/10*6) miles")
+print()
+
+    for i in 0...Int(s0) where i%20 == 0 {
+        var xx:Double = 0
+        let yy = (airports["departing"]!.y)+(Double(i)*(cos(dra(hd0))))
+            if hd0 == 0{
+                xx = 0
+            }else{
+                xx = (airports["departing"]!.x)+(Double(i)*(sin(dra(hd0))))
+    }
+    let xxInt = Int(xx), yyInt = Int(yy)
+        let gridxx = 1000-xxInt
+    print("\(i) NM \(yyInt)N \(gridxx)W")
+    finaleg = (s0-Double(i))
+    }
+    
+    /*
+    
+} else if hd0 < 180{
+    print("90>hd0<180================================")
+} else if hd0 < 270{
+    print("180>hd<270================================")
+    ///this is the next job - we have established the bearing in the case of Newc - Exeter
+    for i in 0...Int(s0) where i%20 == 0 {
+        var xx:Double = 0
+       // print("yup")
+        let yy = (airports["departing"]!.y)+(Double(i)*(cos(dra(hd0))))
+       // print("y=\(airports["departing"]!.y) trig = \(Double(i)*(cos(dra(hd0))))")
+        if hd0 == 0{
+            xx = 0
+        }else{
+            xx = (airports["departing"]!.x)+(Double(i)*(sin(dra(hd0))))
+        }
+        let xxInt = Int(xx), yyInt = Int(yy)
+        print("\(i) NM   x = \(xxInt), y = \(yyInt)")
+        finaleg = (s0-Double(i))
+}// else {
+    print("270>hd<360================================")
+    }
+ 
+ */
+ 
+print()
+let flint = Int(finaleg)
+print("\(flint) miles to run")
+print()
+print("Charlie Alpha this is \(airports["arriving"]!.alpha) approach, you are cleared to land, runway 27L.")
